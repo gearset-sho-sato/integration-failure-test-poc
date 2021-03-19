@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "8429306a-3ff1-446c-bf45-2a71d17c2ca7",
+		"name": "integration-failure-test-poc",
+		"description": "This is POC to run integration tests, using Postman/Newman & TeamCity",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Status For Existing Job",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Should return 200 OK Status Code\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Should include the property 'State' with the value 'Pending'\", function() {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.State).to.eql('Pending');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "token {{Token}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Csrf-Token",
+						"value": "{{CsrfToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "AntiForgeryToken2={{CsrfToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$guid}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://eu.staging.gearset.com/public/continuous-integration-jobs/314b0ef4-5dbd-4fc1-b331-7c6abff27e74/status",
+					"protocol": "https",
+					"host": [
+						"eu",
+						"staging",
+						"gearset",
+						"com"
+					],
+					"path": [
+						"public",
+						"continuous-integration-jobs",
+						"314b0ef4-5dbd-4fc1-b331-7c6abff27e74",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Status For Non-Existing Job",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Should return 200 OK Status Code\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "token {{Token}}"
+					},
+					{
+						"key": "X-Csrf-Token",
+						"type": "text",
+						"value": "{{CsrfToken}}"
+					},
+					{
+						"key": "Cookie",
+						"value": "AntiForgeryToken2={{CsrfToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \" \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://eu.staging.gearset.com/public/continuous-integration-jobs/{{$guid}}/status",
+					"protocol": "https",
+					"host": [
+						"eu",
+						"staging",
+						"gearset",
+						"com"
+					],
+					"path": [
+						"public",
+						"continuous-integration-jobs",
+						"{{$guid}}",
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
